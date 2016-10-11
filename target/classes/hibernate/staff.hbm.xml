@@ -1,0 +1,20 @@
+<?xml version='1.0' encoding='UTF-8'?>  
+<!DOCTYPE hibernate-mapping PUBLIC  
+"-//Hibernate/Hibernate Mapping DTD 3.0//EN"  
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+
+	<class name="staffserver.model.Staff" table="STAFF">
+
+		<id name="id">
+			<generator class="increment"></generator>
+		</id>
+		<property name="company" />
+		<property name="name" />
+		<property name="info" />
+		<property name="avatar" />
+		<many-to-one name="comp" column="company" class="staffserver.model.Company"
+		cascade="all" insert="false" update="false" />
+	</class>
+</hibernate-mapping>  
