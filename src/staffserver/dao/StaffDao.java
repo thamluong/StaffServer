@@ -11,6 +11,7 @@ public interface StaffDao {
 	public List<Company> findAllCompanies();
 	public List<Staff> findAll();
 	public Staff findDetail(int id);
+	public List<Staff> findStaffsByCompany(int id);
 	/*public List<Staff> list();
 	public List<Staff> listObjectStaff(String id);
 	

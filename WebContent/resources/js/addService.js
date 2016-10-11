@@ -1,4 +1,4 @@
-$(document).ready(function(){
+$(function(){
 	$('#home').click(function(){
 		$(window).load('/');
 	})

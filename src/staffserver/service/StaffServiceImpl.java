@@ -35,4 +35,9 @@ public class StaffServiceImpl implements StaffService {
 	public Staff getDetail(int id){
 		return staffDao.findDetail(id);
 	}
+	
+	@Override
+	public List<Staff> getStaffsByCompany(int id){
+		return staffDao.findStaffsByCompany(id);
+	}
 }

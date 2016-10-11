@@ -11,4 +11,5 @@ public interface StaffService {
 	public List<Company> getAllCompanies();
 	public List<Staff> getAll();
 	public Staff getDetail(int id);
+	public List<Staff> getStaffsByCompany(int id);
 }

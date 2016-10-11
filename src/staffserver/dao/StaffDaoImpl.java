@@ -27,9 +27,9 @@ public class StaffDaoImpl implements StaffDao{
 	public List<Company> findAllCompanies(){
 
 		List<Company> list = sessionFactory.getCurrentSession().createQuery("from Company").list();
-		for(Company s : list)
+		/*for(Company s : list)
 			System.out.println("comp = "+s.getName());
-
+*/
 		return list;
 	}
 
@@ -43,15 +43,25 @@ public class StaffDaoImpl implements StaffDao{
 
 		return list;
 	}
-	
+
 	@Override
 	public Staff findDetail(int id){
-		
-		List<Staff> list = sessionFactory.getCurrentSession().createQuery("from Staff where id = "+id).list();
+
+		List<Staff> list = sessionFactory.getCurrentSession().createQuery("from Staff s where s.id = "+id).list();
 		System.out.println("name : "+list.get(0).getName());
 		if(list.size() >= 1)
 			return list.get(0);
 		return null;
+	}
+
+	@Override
+	public List<Staff> findStaffsByCompany(int id){
+		List<Staff> list = sessionFactory.getCurrentSession().createQuery("from Staff s where s.company = "+id).list();
+		System.out.println("size = "+list.size());
+		for (Staff s : list)
+			System.out.println("name = " + s.getComp().getName());
+
+		return list;
 	}
 	/*public List<Staff> list() {
 		String sql = "select list_staff.*,list_company.name_company from list_staffs.list_company "

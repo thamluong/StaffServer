@@ -35,18 +35,17 @@ public class HomeController {
 		mm.put("staff", newct);
 		return "detail";
 	}
-	/*@RequestMapping(value = { "/staffs-acompany" }, method = RequestMethod.GET)
-	public String listStaff_aCompany(ModelMap mmodel,HttpServletRequest request){
+	@RequestMapping("/staffs-acompany")
+	public String listStaff_aCompany(@RequestParam("id") int id, ModelMap mm){
 
-		String company_id = request.getParameter("company_id");
-		if (company_id.equals("0"))
-			mmodel.put("listStaff", staffDAO.list());
-		else mmodel.put("listStaff", staffDAO.listObjectStaff(company_id));
+		if (id == 0)
+			mm.put("staffs", staffService.getAll());
+		else mm.put("staffs", staffService.getStaffsByCompany(id));
 		return "index";
 	}
 
 
-	@RequestMapping(value = "/delete", method = RequestMethod.GET)
+	/*@RequestMapping(value = "/delete", method = RequestMethod.GET)
 	public String deleteStaff(@RequestParam("id") String id){
 		staffDAO.deleteStaff(id.trim());
 		return "index";
