@@ -16,6 +16,9 @@
 	src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 <link rel="stylesheet"
 	href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+	
+<link rel="shortcut icon" href="">
+
 <script type="text/javascript"
 	src="<c:url value="/resources/js/index.js" />"></script>
 <link href="<c:url value="/resources/css/index.css" />" rel="stylesheet">
@@ -27,19 +30,18 @@
 			<h1>
 				<strong>Staffs List</strong>
 			</h1>
-			<br>
-			<br>
+			<br> <br>
 		</div>
 
-		<select class="listCompany">
+		<select class="company">
 			<option value="0" selected>All</option>
 			<c:forEach var="company" items="${companies}" varStatus="status">
 				<option value='${company.id}'>${company.name}</option>
 			</c:forEach>
 		</select> <br> <br>
 
-		<div id='table_div'>
-			<table id='table' class="table" style="name: main-table">
+		<div id='table-div'>
+			<table id='index-table' class="table" style="name: main-table">
 				<thead>
 					<tr bgcolor="#DEB887">
 						<!-- <th><strong>Company</strong></th> -->
@@ -55,7 +57,7 @@
 						<tr>
 							<td>${staff.comp.name}</td>
 							<td>${staff.id}</td>
-							<td><label class="get_name">${staff.name}</label></td>
+							<td>${staff.name}</td>
 							<td><button type="button" class="detail btn btn-success"
 									data-toggle="modal" data-target="#myModal">Detail</button></td>
 							<td><button class='delete'>Delete</button></td>
@@ -64,39 +66,8 @@
 				</tbody>
 			</table>
 		</div>
-		<button type="button" class="btn btn-info btn-lg add-liststaff"
-			data-toggle="modal" data-target="#div-table-search">Add</button>
-		<div class="div-add"></div>
-
-
-		<!-- Modal -->
-		<div class="modal fade" id="myModal" role="dialog">
-			<div class="modal-dialog">
-
-				<!-- Modal content-->
-				<div class="modal-content">
-					<div class="modal-header">
-						<button type="button" class="close" data-dismiss="modal">&times;</button>
-						<h4 class="modal-title"></h4>
-					</div>
-					<div class="modal-body"></div>
-					<div class="modal-footer"></div>
-				</div>
-
-			</div>
-		</div>
-		<!-- <div class="modal-dialog modal-sm">
-				<div class="modal-content">
-					<div class="modal-header">
-						<button type="button" class="close" data-dismiss="modal">&times;</button>
-						<h2 class="modal-title"></h2>
-					</div>
-					<div class="modal-body"></div>
-					<div class="modal-footer"></div>
-				</div>
-			</div> -->
-
-
+		<button type="button" class="btn btn-info btn-lg index-add">Add</button>
+		<div class="add-div"></div>
 	</div>
 
 </body>

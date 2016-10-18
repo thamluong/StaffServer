@@ -1,25 +1,17 @@
 $(function() {
 	$('select').click(function(){
-		var cid = $(".listCompany").val();
+		var cid = $(".company").val();
 
-		$('#table_div').load('staffs-acompany .table', 'id=' +$('.listCompany').val(), function(){
-			var table1 = $('#table').DataTable({
+		$('#table-div').load('staffs-acompany .table', 'id=' +$('.company').val(), function(){
+			var table1 = $('#index-table').DataTable({
 				"lengthMenu": [[5, 10, 20, -1], [5, 10, 20, "All"]],
 				"bDestroy": true,
-				"drawCallback": function(){/*
-
-					$(".add-liststaff").attr("class","btn btn-info btn-lg add-liststaff2");
-					$('.add-liststaff2').on('click', function(){
-						$('.div-add').load('http://localhost:8080/Staffs/StaffService/search-service.html', function(){
-							$('#div-table-search').modal("toggle");
-							$('#add-search-form').click(function () {
-								$('.close').on('click',function() {
-									window.open('add-staff-service', '_self');
-								}); }); }); });
+				"drawCallback": function(){
 
 					$('.detail').on("click", function () {
 						//alert("Detail ok");
 						var id = $(this).parents('tr').children('td').eq(1).text().trim();
+
 						$(".modal-title").text("Information: ");
 						$(".modal-body").load("detail.html .table", "id=" + id);
 						$(".modal-footer").load("detail.html .button-modal", "id=" + id, function () {
@@ -27,24 +19,44 @@ $(function() {
 								table1.$('tr.selected').removeClass('selected');
 							}); }); });
 
-					$('.delete_button').on('click', function(){
+					$('.delete').on('click', function(){
+
 						var id = $(this).parents('tr').children('td').eq(1).text().trim();
 						$(this).parents('tr').addClass("deleted");
+
 						$.get("delete.html", "id=" + id, function () {
 							table1.row('.deleted').remove().draw(false);
-						}); }); 
+						}); });
 
-				*/}}); }); 
-		});
+					$('.index-add').on('click', function(){
+						$('.add-div').load('search-service', function(){
+
+							$('#ss-table-div').modal('show');
+
+							$('.ss-add').click(function () {
+								var checks = [];
+								$.when($('input[name=checkbox]:checked').each(function() {
+
+									var id = $(this).parents('tr').children('td').eq(1).text();
+									checks.push(id);
+
+								})).then(/*$('#ss-table-div').modal('hide')*/);
+
+								window.open('add-service?checks='+checks, '_self');
+							});	});	});
+				}}); }); 
+	});
 
 
-	var table = $('#table').DataTable({
+	var table = $('#index-table').DataTable({
 		"lengthMenu": [[5, 10, 20, -1], [5, 10, 20, "All"]],
+		"bDestroy": true,
 		"drawCallback": function () {
 
 			$('.detail').on("click", function () {
 				//alert("Detail ok");
 				var id = $(this).parents('tr').children('td').eq(1).text().trim();
+
 				$(".modal-title").text("Information: ");
 				$(".modal-body").load("detail.html .table", "id=" + id);
 				$(".modal-footer").load("detail.html .button-modal", "id=" + id, function () {
@@ -52,20 +64,41 @@ $(function() {
 						table.$('tr.selected').removeClass('selected');
 					}); }); });
 
-			$('.delete_button').on('click', function(){
+			$('.delete').on('click', function(){
+
 				var id = $(this).parents('tr').children('td').eq(1).text().trim();
 				$(this).parents('tr').addClass("deleted");
+
 				$.get("delete.html", "id=" + id, function () {
 					table.row('.deleted').remove().draw(false);
 				}); });
 
-			$('.add-liststaff').on('click', function(){
-				$('.div-add').load('http://localhost:8080/Staffs/StaffService/search-service.html', function(){
-					$('#div-table-search').modal("toggle");
-					$('#add-search-form').click(function () {
-						$('.close').on('click',function() {
-							window.open('add-staff-service', '_self');
-						}); }); }); });
+			$('.index-add').on('click', function(){
+				$('.add-div').load('search-service', function(){
+
+					$('#ss-table-div').modal('show');
+
+					$("#form_select")/*.unbind('submit').bind('submit',*/.submit(function(event){
+						//$("#form_select").submit(function(event){
+						event.preventDefault();
+						
+						$('.table-div').load('search-service-search?department='+$('.department option:selected').text()
+								+ "&position="+$('.position option:selected').text() + " .table", function(){
+							//window.open("google.com.vn", "_self");
+						}); });
+					
+					$('.ss-add').click(function () {	
+						
+						var checks = [];
+						$.when($('input[name=checkbox]:checked').each(function() {
+
+							var id = $(this).parents('tr').children('td').eq(1).text();
+							checks.push(id);
+
+						})).then(/*$('#ss-table-div').modal('hide')*/);
+
+						window.open('add-service?checks='+checks, '_self');
+					});	});	});
 		}});
 });
 

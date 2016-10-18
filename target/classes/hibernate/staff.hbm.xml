@@ -15,6 +15,6 @@
 		<property name="info" />
 		<property name="avatar" />
 		<many-to-one name="comp" column="company" class="staffserver.model.Company"
-		cascade="all" insert="false" update="false" />
+		cascade="all" lazy="false" insert="false" update="false" />
 	</class>
 </hibernate-mapping>  

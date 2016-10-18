@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import staffserver.model.Company;
 import staffserver.model.Staff;
+import staffserver.model.StaffClient;
 
 @Repository
 @SuppressWarnings("unchecked")
@@ -26,29 +27,20 @@ public class StaffDaoImpl implements StaffDao{
 	@Override
 	public List<Company> findAllCompanies(){
 
-		List<Company> list = sessionFactory.getCurrentSession().createQuery("from Company").list();
-		/*for(Company s : list)
-			System.out.println("comp = "+s.getName());
-*/
-		return list;
+		return sessionFactory.getCurrentSession().createQuery("from Company").list();
 	}
 
 	@Override
 	public List<Staff> findAll(){
 
-		List<Staff> list = sessionFactory.getCurrentSession().createQuery("from Staff").list();
-
-		for(Staff e:list)
-			System.out.println("name = "+e.getComp().getName());
-
-		return list;
+		return sessionFactory.getCurrentSession().createQuery("from Staff").list();
 	}
 
 	@Override
 	public Staff findDetail(int id){
 
 		List<Staff> list = sessionFactory.getCurrentSession().createQuery("from Staff s where s.id = "+id).list();
-		System.out.println("name : "+list.get(0).getName());
+
 		if(list.size() >= 1)
 			return list.get(0);
 		return null;
@@ -56,96 +48,45 @@ public class StaffDaoImpl implements StaffDao{
 
 	@Override
 	public List<Staff> findStaffsByCompany(int id){
-		List<Staff> list = sessionFactory.getCurrentSession().createQuery("from Staff s where s.company = "+id).list();
-		System.out.println("size = "+list.size());
-		for (Staff s : list)
-			System.out.println("name = " + s.getComp().getName());
 
-		return list;
-	}
-	/*public List<Staff> list() {
-		String sql = "select list_staff.*,list_company.name_company from list_staffs.list_company "
-				+ " inner join list_staffs.list_staff on list_company.id_company=list_staff.id_company order by id_staff";
-
-		Object[] params = new Object[] {};
-		StaffMapper mapper = new StaffMapper();
-		List<Staff> list = this.getJdbcTemplate().query(sql, params, mapper);
-		return list;
+		return sessionFactory.getCurrentSession().createQuery("from Staff s where s.company = "+id).list();
 	}
 
+	@Override
+	public void insertOrUpdateToDb(List<StaffClient> staffs){
 
-	public List<Staff> listObjectStaff(String  id){
-		String sql = "select list_staff.*,list_company.name_company from list_staffs.list_company "
-				+ " inner join list_staffs.list_staff on list_company.id_company=list_staff.id_company "
-				+ " where list_staff.id_company="+id;
+		for(StaffClient sc : staffs){
 
-		StaffMapper mapper = new StaffMapper();
-		List<Staff> list = this.getJdbcTemplate().query(sql,  mapper);
-		return list;
-	}
+			if(isExisted(sc.getName(), sc.getInfo()) == 1) 
+				sessionFactory.getCurrentSession().createQuery("UPDATE Staff s set s.avatar = '"+sc.getAvatar()
+				+ "' WHERE s.name like '%"+sc.getName()+"%' and s.info like '%"+sc.getInfo()+"%'")
+				.executeUpdate();
 
-
-	public void deleteStaff(String id){
-		String sql="DELETE FROM list_staffs.list_staff WHERE id_staff="+id;
-		this.getJdbcTemplate().update(sql);
-		return;
-	}
-
-
-	public int addStaff(Staff ct){
-		String sql="insert into list_staffs.list_staff ( id_company, name_staff, info_staff, avatar_staff) "
-				+ " values (?,?,?,?)";
-		this.getJdbcTemplate().update(sql,ct.getId_company(),ct.getName_staff(),ct.getInfo_staff(),ct.getAvatar_staff());
-		return -1;
-	}
-
-
-	public Staff detailStaff(String id){
-		String sql = "select list_staff.*,list_company.name_company from list_staffs.list_company "
-				+ " inner join list_staffs.list_staff on list_company.id_company=list_staff.id_company "
-				+ " where list_staff.id_staff="+id;
-
-		StaffMapper mapper = new StaffMapper();	 
-		Staff ct = this.getJdbcTemplate().queryForObject(sql, mapper);
-		return ct;
-	}
-
-
-	public void updateDb(List<Staff> staffs){
-		int n = staffs.size();
-		Staff staff = new Staff();
-		while(--n >= 0){
-			staff = staffs.get(n);
-			System.out.print(staff.getName_staff());
-			if(isExisted(staff.getName_staff()) == 0){
-				System.out.println(" not exist");
-
-				String sql="insert into list_staffs.list_staff ( id_company, name_staff, info_staff, avatar_staff) "
-						+ "values ('"+staff.getId_company()+"','"+
-						staff.getName_staff()+"','"+staff.getInfo_staff()+"','"+staff.getAvatar_staff()+"')";
-				try{
-					this.getJdbcTemplate().update(sql);
-					System.out.println("Update successful");
-				}catch(Exception ex){
-					System.out.println(ex.getMessage());
-				}}}
-	}
-
-
-	public int isExisted(String name){
-		String sql = "SELECT id_staff FROM list_staffs.list_staff"
-				+ " where (name_staff,info_staff,avatar_staff) "
-				+ " in ( select name_staff,info_staff,avatar_staff from company.staff)"
-				+ " and name_staff='"+name+"'";
-
-		try{
-			this.getJdbcTemplate().queryForObject(sql, Integer.class);
-			//System.out.println(" existed");
-			return 1;
-		}catch(Exception ex){
-			//System.out.println(ex.getMessage());
-			//System.out.println(" not existed");
-			return 0;
+			else {
+				sessionFactory.getCurrentSession().createSQLQuery("INSERT INTO list_staffs.staff(name, company, info, avatar) "
+						+ "VALUES ('"+sc.getName()+"', 1, '"+sc.getInfo()+"', '"+sc.getAvatar()+"')")
+				.executeUpdate();
+			}
 		}
-	}*/
+	}
+	@Override
+	public int isExisted(String name, String info){
+		List<Staff> list = sessionFactory.getCurrentSession().createQuery("from Staff s where s.name like '%"+name+"%' and s.info like '%"+info+"%'").list();
+
+		if (list.size() > 0){
+			System.out.println("Staff "+name+" is existed");
+			return 1;
+		}
+		return 0;
+	}
+
+	@Override
+	public void delete(String id){
+		try{
+			sessionFactory.getCurrentSession().createQuery("DELETE from Staff s where s.id = "+id).executeUpdate();
+		}catch(Exception ex){
+			System.out.println(ex.getMessage());
+		}
+	}
+
 }
